@@ -15,7 +15,7 @@ ENV FLOX_VERSION master
 
 RUN set -ex; \
     \
-    git clone --branch $FLOX_VERSION https://github.com/devfake/flox.git /tmp/flox; \
+    git clone --branch $FLOX_VERSION https://github.com/calgara12/docker-flox.git /tmp/flox; \
     cd /tmp/flox/backend; \
     composer --no-cache install;
 
@@ -31,12 +31,12 @@ RUN set -ex; \
     \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-        supervisor \
-        gosu \
-        sqlite3 \
-        rsync \
-        libpq5 \
-        libpq-dev \
+    supervisor \
+    gosu \
+    sqlite3 \
+    rsync \
+    libpq5 \
+    libpq-dev \
     ; \
     chmod +x /usr/local/bin/supercronic; \
     echo '* * * * * php /var/www/flox/backend/artisan schedule:run >> /dev/null 2>&1' > /crontab; \
@@ -44,20 +44,20 @@ RUN set -ex; \
     mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"; \
     \
     { \
-        echo "upload_max_filesize=128M"; \
-        echo "post_max_size=128M"; \
+    echo "upload_max_filesize=128M"; \
+    echo "post_max_size=128M"; \
     } > /usr/local/etc/php/conf.d/flox.ini; \
     \
     mkdir -p \
-        /var/log/supervisord \
-        /var/run/supervisord \
-        /var/www/flox \
+    /var/log/supervisord \
+    /var/run/supervisord \
+    /var/www/flox \
     ; \
     docker-php-ext-install -j "$(nproc)" \
-        bcmath \
-        pdo_mysql \
-        pdo_pgsql \
-        opcache \
+    bcmath \
+    pdo_mysql \
+    pdo_pgsql \
+    opcache \
     ; \
     apt-get purge -y --autoremove libpq-dev; \
     rm -rf /var/lib/apt/lists/*;
